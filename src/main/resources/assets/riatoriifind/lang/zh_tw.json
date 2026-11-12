@@ -39,7 +39,7 @@
   "riatoriifind.config.refresh_source.tooltip": "開啟後點擊完成並退出，會自動還原此開關並刷新一次目前的資料來源。",
 
   "riatoriifind.config.debug_mode": "除錯模式",
-  "riatoriifind.config.debug_mode.tooltip": "開啟後在日誌中輸出詳細執行資訊，用於排查問題，沒事沒必要打開。",
+  "riatoriifind.config.debug_mode.tooltip": "開啟後在日誌中輸出詳細執行資訊，用於排查問題，沒事別打開。",
 
   "riatoriifind.source.check.success.title": "資料來源連線成功",
   "riatoriifind.source.check.success.message": "成功從遠端來源取得資料檔案。",

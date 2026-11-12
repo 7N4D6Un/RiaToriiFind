@@ -39,7 +39,7 @@
   "riatoriifind.config.refresh_source.tooltip": "When enabled, after clicking Done and exiting, this switch will automatically be reset and the current data source will be refreshed once.",
 
   "riatoriifind.config.debug_mode": "Debug mode",
-  "riatoriifind.config.debug_mode.tooltip": "When enabled, outputs detailed runtime information to the log for troubleshooting; no need to turn it on otherwise.",
+  "riatoriifind.config.debug_mode.tooltip": "When enabled, outputs detailed runtime information to the log for troubleshooting; don't turn it on otherwise.",
 
   "riatoriifind.source.check.success.title": "Data source connection successful",
   "riatoriifind.source.check.success.message": "Successfully retrieved data file from remote source.",

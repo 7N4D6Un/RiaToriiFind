@@ -30,7 +30,7 @@
   "riatoriifind.config.show_check_popups": "显示连接结果提示",
   "riatoriifind.config.show_check_popups.tooltip": "关闭后，切换远程数据源后不会弹出连接成功或失败的提示。",
   "riatoriifind.config.source": "数据源",
-  "riatoriifind.config.source.tooltip": "选择用于查询鸟居信息的数据源\n\n- 本地数据源：使用 Mod 内置的数据，随 Mod 更新而更新，数据比较滞后；\n- RIA Wiki 数据源：存放在 RIA Wiki 上，更新比较及时；\n- GitHub 数据源：通过加速节点获取，可能因各种原因获取失败，更新比较及时；- Gitee 数据源：测试性，更新比较及时。",
+  "riatoriifind.config.source.tooltip": "选择用于查询鸟居信息的数据源\n\n- 本地数据源：使用 Mod 内置的数据，随 Mod 更新而更新，数据比较滞后；\n- RIA Wiki 数据源：存放在 RIA Wiki 上，更新比较及时；\n- GitHub 数据源：通过加速节点获取，可能因各种原因获取失败，更新比较及时；\n- Gitee 数据源：测试性，更新比较及时。",
   "riatoriifind.config.source.local": "本地数据源",
   "riatoriifind.config.source.ria-wiki": "RIA Wiki 数据源",
   "riatoriifind.config.source.github": "GitHub 数据源",
@@ -39,7 +39,7 @@
   "riatoriifind.config.refresh_source.tooltip": "开启后点击完成并退出，会自动还原此开关并刷新一次当前数据源。",
 
   "riatoriifind.config.debug_mode": "调试模式",
-  "riatoriifind.config.debug_mode.tooltip": "开启后在日志中输出详细运行信息，用于排查问题，没事没必要打开。",
+  "riatoriifind.config.debug_mode.tooltip": "开启后在日志中输出详细运行信息，用于排查问题，没事别打开。",
 
   "riatoriifind.source.check.success.title": "数据源连接成功",
   "riatoriifind.source.check.success.message": "成功从远程源获取到数据文件。",
