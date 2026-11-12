@@ -1,7 +1,7 @@
 package com.fletime.riatoriifind.config;
 
 import com.fletime.riatoriifind.compat.CompatAccessor;
-import com.fletime.riatoriifind.service.SourceCheckService;
+import com.fletime.riatoriifind.service.SourceSyncService;
 import com.fletime.riatoriifind.service.ToriiDataService;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
@@ -14,6 +14,8 @@ import net.minecraft.network.chat.Component;
 import java.util.concurrent.CompletableFuture;
 
 public final class RiaConfigScreen {
+
+    private static CompletableFuture<SourceSyncService.Result> lastNotifiedTask;
 
     private RiaConfigScreen() {
         throw new UnsupportedOperationException("Utility class");
@@ -87,35 +89,30 @@ public final class RiaConfigScreen {
 
     private static void refreshCurrentSource() {
         if (ModConfig.SOURCE_RIA_WIKI.equals(ModConfig.currentSource)) {
-            ToriiDataService.reloadCache();
-            SourceCheckService.check(ModConfig.RIA_WIKI_URL, 5, 3000L)
-                    .thenCompose(connected -> {
-                        if (!connected) {
-                            ModConfig.currentSource = ModConfig.SOURCE_LOCAL;
-                            ModConfig.syncBuiltinData();
-                            ToriiDataService.reloadCache();
-                            return CompletableFuture.completedFuture(false);
-                        }
-                        return SourceCheckService.updateFromRemote(ModConfig.RIA_WIKI_URL, ModConfig.getLocalDataFile())
-                                .thenApply(updated -> {
-                                    if (updated) ToriiDataService.reloadCache();
-                                    return true;
-                                });
-                    })
-                    .thenAccept(success -> {
-                        if (!ModConfig.showCheckPopups) return;
-                        Minecraft.getInstance().execute(() ->
-                                showToast(success
-                                        ? Component.translatable("riatoriifind.source.check.success.title")
-                                        : Component.translatable("riatoriifind.source.check.fallback.title"),
-                                        success
-                                                ? Component.translatable("riatoriifind.source.check.success.message")
-                                                : Component.translatable("riatoriifind.source.check.fallback.message")));
-                    });
+            notifyOnce(SourceSyncService.refreshRemote());
         } else {
+            SourceSyncService.abandonRemote();
             ModConfig.syncBuiltinData();
             ToriiDataService.reloadCache();
         }
+    }
+
+    private static void notifyOnce(CompletableFuture<SourceSyncService.Result> task) {
+        synchronized (RiaConfigScreen.class) {
+            if (lastNotifiedTask == task) return;
+            lastNotifiedTask = task;
+        }
+        task.thenAccept(result -> {
+            if (result == SourceSyncService.Result.ABORTED || !ModConfig.showCheckPopups) return;
+            boolean ok = result != SourceSyncService.Result.FALLBACK_LOCAL;
+            Minecraft.getInstance().execute(() ->
+                    showToast(ok
+                                    ? Component.translatable("riatoriifind.source.check.success.title")
+                                    : Component.translatable("riatoriifind.source.check.fallback.title"),
+                            ok
+                                    ? Component.translatable("riatoriifind.source.check.success.message")
+                                    : Component.translatable("riatoriifind.source.check.fallback.message")));
+        });
     }
 
     private static void performSourceSwitch() {

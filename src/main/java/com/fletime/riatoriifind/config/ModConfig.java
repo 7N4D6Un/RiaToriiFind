@@ -35,7 +35,7 @@ public final class ModConfig {
 
     public static final String[] SOURCES = {SOURCE_LOCAL, SOURCE_RIA_WIKI};
 
-    public static String currentSource = "local";
+    public static volatile String currentSource = "local";
     public static boolean showCheckPopups = true;
     public static boolean debugMode = false;
 

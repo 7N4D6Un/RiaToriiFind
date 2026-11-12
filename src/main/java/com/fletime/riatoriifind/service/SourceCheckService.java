@@ -8,13 +8,26 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.AtomicMoveNotSupportedException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.BooleanSupplier;
 import java.util.regex.Pattern;
 
 public final class SourceCheckService {
+
+    public enum UpdateOutcome {
+        // 未能读取远程版本号或下载失败
+        FETCH_FAILED,
+        // 本地版本不低于远程版本
+        UP_TO_DATE,
+        // 已下载并原子替换本地文件
+        UPDATED,
+        // 下载前发现源已切换, 未写入
+        ABORTED
+    }
 
     private static final Pattern VERSION_PATTERN = Pattern.compile("\"version\"\\s*:\\s*(\\d+)");
 
@@ -44,24 +57,33 @@ public final class SourceCheckService {
         });
     }
 
-    public static CompletableFuture<Boolean> updateFromRemote(String url, Path localFile) {
+    // shouldContinue 在读取版本号前后各校验一次, 源切走后不再发起下载
+    public static CompletableFuture<UpdateOutcome> updateFromRemote(String url, Path localFile, BooleanSupplier shouldContinue) {
         return CompletableFuture.supplyAsync(() -> {
+            if (!shouldContinue.getAsBoolean()) return UpdateOutcome.ABORTED;
+
             int remoteVer = fetchRemoteVersion(url);
             if (remoteVer < 0) {
                 if (ModConfig.debugMode) RiaToriiFind.LOGGER.warn("获取远程版本号失败");
-                return false;
+                return UpdateOutcome.FETCH_FAILED;
             }
 
             int localVer = readLocalVersion(localFile);
             if (localVer >= remoteVer) {
                 if (ModConfig.debugMode) RiaToriiFind.LOGGER.info("本地已是最新 (本地 v{} >= 远程 v{})", localVer, remoteVer);
-                return false;
+                return UpdateOutcome.UP_TO_DATE;
+            }
+
+            if (!shouldContinue.getAsBoolean()) {
+                if (ModConfig.debugMode) RiaToriiFind.LOGGER.info("源已切换, 跳过下载");
+                return UpdateOutcome.ABORTED;
             }
 
             if (ModConfig.debugMode) RiaToriiFind.LOGGER.info("远程 (v{}) 新于本地 (v{}), 开始下载", remoteVer, localVer);
             boolean downloaded = downloadFile(url, localFile);
-            if (ModConfig.debugMode && downloaded) RiaToriiFind.LOGGER.info("下载完成");
-            return downloaded;
+            if (!downloaded) return UpdateOutcome.FETCH_FAILED;
+            if (ModConfig.debugMode) RiaToriiFind.LOGGER.info("下载完成");
+            return UpdateOutcome.UPDATED;
         });
     }
 
@@ -103,13 +125,27 @@ public final class SourceCheckService {
         }
     }
 
+    // 先写临时文件再原子替换
     private static boolean downloadFile(String url, Path target) {
         try {
             var conn = openConnection(url, 5000, 10000);
             try (InputStream in = conn.getInputStream()) {
                 Files.createDirectories(target.getParent());
-                Files.copy(in, target, StandardCopyOption.REPLACE_EXISTING);
-                return true;
+                var tmp = Files.createTempFile(target.getParent(), "toriidata", ".tmp");
+                try {
+                    Files.copy(in, tmp, StandardCopyOption.REPLACE_EXISTING);
+                    try {
+                        Files.move(tmp, target, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
+                    } catch (AtomicMoveNotSupportedException e) {
+                        Files.move(tmp, target, StandardCopyOption.REPLACE_EXISTING);
+                    }
+                    return true;
+                } finally {
+                    try {
+                        Files.deleteIfExists(tmp);
+                    } catch (IOException ignored) {
+                    }
+                }
             }
         } catch (IOException e) {
             return false;
