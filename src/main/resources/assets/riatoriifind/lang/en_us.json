@@ -30,9 +30,11 @@
   "riatoriifind.config.show_check_popups": "Show connection result popups",
   "riatoriifind.config.show_check_popups.tooltip": "When disabled, popups for successful or failed connections will not appear after switching remote data sources.",
   "riatoriifind.config.source": "Data Source",
-  "riatoriifind.config.source.tooltip": "Select the data source for querying torii information.\n\n- Local data source: Uses the mod's built-in data, updated with mod updates, data may be lagging.\n- RIA Wiki data source: Maintained by FleTime and hosted on the RIA Wiki, updated more promptly.",
+  "riatoriifind.config.source.tooltip": "Select the data source for querying torii information.\n\n- Local data source: Uses the mod's built-in data, updated with mod updates; data may be lagging.\n- RIA Wiki data source: Hosted on the RIA Wiki, updated fairly promptly.\n- GitHub data source: Fetched through acceleration nodes; may fail for various reasons, updated fairly promptly.\n- Gitee data source: Experimental; updated fairly promptly.",
   "riatoriifind.config.source.local": "Local data source",
   "riatoriifind.config.source.ria-wiki": "RIA Wiki data source",
+  "riatoriifind.config.source.github": "GitHub data source",
+  "riatoriifind.config.source.gitee": "Gitee data source",
   "riatoriifind.config.refresh_source": "Refresh current data source",
   "riatoriifind.config.refresh_source.tooltip": "When enabled, after clicking Done and exiting, this switch will automatically be reset and the current data source will be refreshed once.",
 
@@ -42,5 +44,5 @@
   "riatoriifind.source.check.success.title": "Data source connection successful",
   "riatoriifind.source.check.success.message": "Successfully retrieved data file from remote source.",
   "riatoriifind.source.check.fallback.title": "Data source connection failed",
-  "riatoriifind.source.check.fallback.message": "Unable to connect to remote source, switched to local data source."
+  "riatoriifind.source.check.fallback.message": "Unable to connect to remote source; continuing with existing data."
 }

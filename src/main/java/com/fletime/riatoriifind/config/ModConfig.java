@@ -30,10 +30,14 @@ public final class ModConfig {
 
     public static final String SOURCE_LOCAL = "local";
     public static final String SOURCE_RIA_WIKI = "ria-wiki";
+    public static final String SOURCE_GITHUB = "github";
+    public static final String SOURCE_GITEE = "gitee";
 
     public static final String RIA_WIKI_URL = "https://wiki.ria.red/wiki/%E7%94%A8%E6%88%B7:FleTime/toriifind.json?action=raw";
+    public static final String GITHUB_URL = "https://cdn.jsdelivr.net/gh/7N4D6Un/RiaToriiFind@main/src/main/resources/assets/riatoriifind/toriidata.json";
+    public static final String GITEE_URL = "https://raw.giteeusercontent.com/XBbT284/RiaToriiFind/raw/main/src/main/resources/assets/riatoriifind/toriidata.json";
 
-    public static final String[] SOURCES = {SOURCE_LOCAL, SOURCE_RIA_WIKI};
+    public static final String[] SOURCES = {SOURCE_LOCAL, SOURCE_RIA_WIKI, SOURCE_GITHUB, SOURCE_GITEE};
 
     public static volatile String currentSource = "local";
     public static boolean showCheckPopups = true;
@@ -172,6 +176,14 @@ public final class ModConfig {
         } catch (IOException | JsonSyntaxException e) {
             return -1;
         }
+    }
+
+    // 返回数据源的远程地址; 本地源或未知源返回 null
+    public static String getSourceUrl(String source) {
+        if (SOURCE_RIA_WIKI.equals(source)) return RIA_WIKI_URL;
+        if (SOURCE_GITHUB.equals(source)) return GITHUB_URL;
+        if (SOURCE_GITEE.equals(source)) return GITEE_URL;
+        return null;
     }
 
     public static Path getConfigDir() {

@@ -30,9 +30,11 @@
   "riatoriifind.config.show_check_popups": "顯示連線結果提示",
   "riatoriifind.config.show_check_popups.tooltip": "關閉後，切換遠端資料來源後不會彈出連線成功或失敗的提示。",
   "riatoriifind.config.source": "資料來源",
-  "riatoriifind.config.source.tooltip": "選擇用於查詢鳥居資訊的資料來源\n\n- 本地資料來源：使用 Mod 內置的資料，隨 Mod 更新而更新，資料比較滯後。\n- RIA Wiki 資料來源：由 FleTime 維護的存放於 RIA Wiki 上的資料來源，更新比較及時。",
+  "riatoriifind.config.source.tooltip": "選擇用於查詢鳥居資訊的資料來源\n\n- 本地資料來源：使用 Mod 內置的資料，隨 Mod 更新而更新，資料比較滯後；\n- RIA Wiki 資料來源：存放於 RIA Wiki 上，更新比較及時；\n- GitHub 資料來源：透過加速節點取得，可能因各種原因取得失敗，更新比較及時；\n- Gitee 資料來源：測試性，更新比較及時。",
   "riatoriifind.config.source.local": "本地資料來源",
   "riatoriifind.config.source.ria-wiki": "RIA Wiki 資料來源",
+  "riatoriifind.config.source.github": "GitHub 資料來源",
+  "riatoriifind.config.source.gitee": "Gitee 資料來源",
   "riatoriifind.config.refresh_source": "刷新目前資料來源",
   "riatoriifind.config.refresh_source.tooltip": "開啟後點擊完成並退出，會自動還原此開關並刷新一次目前的資料來源。",
 
@@ -42,5 +44,5 @@
   "riatoriifind.source.check.success.title": "資料來源連線成功",
   "riatoriifind.source.check.success.message": "成功從遠端來源取得資料檔案。",
   "riatoriifind.source.check.fallback.title": "資料來源連線失敗",
-  "riatoriifind.source.check.fallback.message": "無法連線遠端來源，已切換為本地資料來源。"
+  "riatoriifind.source.check.fallback.message": "無法連線遠端來源，繼續使用已有資料。"
 }

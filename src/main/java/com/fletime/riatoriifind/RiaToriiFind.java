@@ -27,9 +27,9 @@ public final class RiaToriiFind implements ClientModInitializer {
 
     // 仅在当前源为远程时启动异步数据更新, 与配置界面的刷新共享同一条同步链
     private static void checkOnlineSource() {
-        if (!ModConfig.SOURCE_RIA_WIKI.equals(ModConfig.currentSource)) return;
+        if (ModConfig.SOURCE_LOCAL.equals(ModConfig.currentSource)) return;
 
-        if (ModConfig.debugMode) LOGGER.info("开始检查远程数据源更新");
+        if (ModConfig.debugMode) LOGGER.info("开始检查远程数据源更新: {}", ModConfig.currentSource);
         SourceSyncService.refreshRemote();
     }
 

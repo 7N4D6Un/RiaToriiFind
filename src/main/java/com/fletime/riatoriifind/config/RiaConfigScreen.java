@@ -88,12 +88,12 @@ public final class RiaConfigScreen {
     }
 
     private static void refreshCurrentSource() {
-        if (ModConfig.SOURCE_RIA_WIKI.equals(ModConfig.currentSource)) {
-            notifyOnce(SourceSyncService.refreshRemote());
-        } else {
+        if (ModConfig.SOURCE_LOCAL.equals(ModConfig.currentSource)) {
             SourceSyncService.abandonRemote();
             ModConfig.syncBuiltinData();
             ToriiDataService.reloadCache();
+        } else {
+            notifyOnce(SourceSyncService.refreshRemote());
         }
     }
 
@@ -104,7 +104,7 @@ public final class RiaConfigScreen {
         }
         task.thenAccept(result -> {
             if (result == SourceSyncService.Result.ABORTED || !ModConfig.showCheckPopups) return;
-            boolean ok = result != SourceSyncService.Result.FALLBACK_LOCAL;
+            boolean ok = result != SourceSyncService.Result.FAILED;
             Minecraft.getInstance().execute(() ->
                     showToast(ok
                                     ? Component.translatable("riatoriifind.source.check.success.title")
